@@ -1,0 +1,9 @@
+---
+- name: Check RSA key strength
+  shell: "ssh-keygen -lf /etc/ssh/ssh_host_rsa_key | cut -d' ' -f1"
+  register: rsa_key_strength
+  changed_when: false
+
+- name: Generate 4096 bit RSA key
+  command: ssh-keygen -t rsa -b 4096 -f /etc/ssh/test_key -N ""
+  when: rsa_key_strength.stdout|int < 4096

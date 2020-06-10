@@ -1,0 +1,15 @@
+---
+- name: Check for weak Diffie-Hellman moduli
+  command: "awk '$5 < 3071' {{ sshd_config_directory }}/moduli"
+  register: weak_moduli
+  changed_when: false
+
+- name: Filter out weak Diffie-Hellman moduli
+  shell: "awk '$5 >= 3071' {{ sshd_config_directory }}/moduli > {{ sshd_config_directory }}/moduli.tmp"
+  when: weak_moduli.stdout != ""
+
+- name: Remove weak Diffie-Hellman moduli
+  command: "mv {{ sshd_config_directory }}/moduli.tmp {{ sshd_config_directory }}/moduli"
+  when: weak_moduli.stdout != ""
+  notify:
+    - restart ssh

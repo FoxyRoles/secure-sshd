@@ -1,0 +1,27 @@
+---
+- name: Set KexAlgorithms
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    insertafter: "^# Ciphers and keying"
+    regexp: "^KexAlgorithms"
+    line: "KexAlgorithms {{ sshd_available_settings[sshd_use_settings].KexAlgorithms|join(',') }}"
+  notify:
+    - restart ssh
+
+- name: Set Ciphers
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    insertafter: "^KexAlgorithms"
+    regexp: "^Ciphers"
+    line: "Ciphers {{ sshd_available_settings[sshd_use_settings].Ciphers|join(',') }}"
+  notify:
+    - restart ssh
+
+- name: Set MACs
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    insertafter: "^Ciphers"
+    regexp: "^MACs"
+    line: "MACs {{ sshd_available_settings[sshd_use_settings].MACs|join(',') }}"
+  notify:
+    - restart ssh

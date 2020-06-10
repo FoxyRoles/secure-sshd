@@ -1,0 +1,55 @@
+---
+sshd_key_types:
+  - ed25519
+  - ecdsa
+  - rsa
+  - dsa
+
+sshd_allowed_key_types:
+  - ed25519
+  - ecdsa
+  - rsa
+
+sshd_config_directory: "{{ sshd_distro_settings[ansible_facts['distribution']].config_directory | default('/etc/ssh') }}"
+sshd_key_directory: "{{ sshd_distro_settings[ansible_facts['distribution']].key_directory | default('/etc/ssh') }}"
+
+sshd_use_settings: mozilla_modern
+
+sshd_available_settings:
+  mozilla_modern:
+    KexAlgorithms:
+      - curve25519-sha256@libssh.org
+      - ecdh-sha2-nistp521
+      - ecdh-sha2-nistp384
+      - ecdh-sha2-nistp256
+      - diffie-hellman-group-exchange-sha256
+    Ciphers:
+      - chacha20-poly1305@openssh.com
+      - aes256-gcm@openssh.com
+      - aes128-gcm@openssh.com
+      - aes256-ctr
+      - aes192-ctr
+      - aes128-ctr
+    MACs:
+      - hmac-sha2-512-etm@openssh.com
+      - hmac-sha2-256-etm@openssh.com
+      - umac-128-etm@openssh.com
+      - hmac-sha2-512
+      - hmac-sha2-256
+      - umac-128@openssh.com
+    moduli_min_size: 3071
+  mozilla_intermediate:
+    KexAlgorithms:
+      - diffie-hellman-group-exchange-sha256
+    MACs:
+      - hmac-sha2-512
+      - hmac-sha2-256
+    Ciphers:
+      - aes256-ctr
+      - aes192-ctr
+      - aes128-ctr
+    moduli_min_size: 2047
+
+sshd_distro_settings:
+  SmartOS:
+    key_directory: /var/ssh

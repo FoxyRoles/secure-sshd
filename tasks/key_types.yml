@@ -1,0 +1,18 @@
+---
+- name: Enable keys
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: "^#?HostKey /etc/ssh/ssh_host_{{ item }}_key"
+    line: "HostKey {{ sshd_key_directory }}/ssh_host_{{ item }}_key"
+  with_items: "{{ sshd_key_types | intersect(sshd_allowed_key_types) }}"
+  notify:
+    - restart ssh
+
+- name: Disable keys
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: "^#?HostKey {{ sshd_key_directory }}/ssh_host_{{ item }}_key"
+    state: absent
+  with_items: "{{ sshd_key_types | difference(sshd_allowed_key_types) }}"
+  notify:
+    - restart ssh
