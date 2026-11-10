@@ -1,0 +1,10 @@
+---
+- name: Hide Debian version information in the SSH banner
+  lineinfile:
+    path: "{{ sshd_config_directory }}/sshd_config"
+    insertafter: "^#?Banner"
+    regexp: '^[ \t]*#?[ \t]*DebianBanner[ \t]+'
+    line: "DebianBanner no"
+  when: ansible_facts['os_family'] == 'Debian'
+  notify:
+    - restart ssh

@@ -15,6 +15,7 @@ sshd_key_directory: "{{ sshd_distro_settings[ansible_facts['distribution']].key_
 
 sshd_use_settings: mozilla_modern
 
+# https://infosec.mozilla.org/guidelines/openssh
 sshd_available_settings:
   mozilla_modern:
     KexAlgorithms:
